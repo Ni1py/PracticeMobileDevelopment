@@ -12,14 +12,27 @@ import mobile.newsapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var mainBinding : ActivityMainBinding
+    val a = 457
+    val b = 56
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        mainBinding.bTest.setOnClickListener {
-            mainBinding.text3.visibility = View.GONE
+        mainBinding.addB.setOnClickListener {
+            val result = a + b
+            mainBinding.tvResult.text = "Результат сложения равен: $result"
+        }
+
+        mainBinding.subtractB.setOnClickListener {
+            val result = a - b
+            mainBinding.tvResult.text = "Результат вычитания равен: $result"
+        }
+
+        mainBinding.multiplyB.setOnClickListener {
+            val result = a * b
+            mainBinding.tvResult.text = "Результат умножения равен: $result"
         }
     }
 }
