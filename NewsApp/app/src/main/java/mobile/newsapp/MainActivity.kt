@@ -1,5 +1,6 @@
 package mobile.newsapp
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -12,27 +13,37 @@ import mobile.newsapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var mainBinding : ActivityMainBinding
-    val a = 457
-    val b = 56
+    val maxPerson = 90
+    val currentPerson = 91
+    val text = "кот"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        mainBinding.addB.setOnClickListener {
-            val result = a + b
-            mainBinding.tvResult.text = "Результат сложения равен: $result"
+        mainBinding.check1.setOnClickListener {
+            mainBinding.tvResult.setBackgroundColor(if (maxPerson > currentPerson) Color.GREEN else Color.RED)
+            if (maxPerson > currentPerson)
+                mainBinding.tvResult.text = "Все в порядке"
+            else
+                mainBinding.tvResult.text = "Превышено максимальное количество посетителей"
         }
 
-        mainBinding.subtractB.setOnClickListener {
-            val result = a - b
-            mainBinding.tvResult.text = "Результат вычитания равен: $result"
+        mainBinding.check2.setOnClickListener {
+            when(currentPerson) {
+                in 0..maxPerson -> mainBinding.tvResult.text = "Все в порядке"
+                else -> mainBinding.tvResult.text = "Превышено максимальное количество посетителей"
+            }
         }
 
-        mainBinding.multiplyB.setOnClickListener {
-            val result = a * b
-            mainBinding.tvResult.text = "Результат умножения равен: $result"
+        mainBinding.check3.setOnClickListener {
+            mainBinding.tvResult.text = when(text) {
+                "опасность" -> "опасность"
+                "не опасность" -> "не опасность"
+                "кот", "кошка" -> "кот, кошка"
+                else -> "непонятно"
+            }
         }
     }
 }

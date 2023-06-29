@@ -11,39 +11,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
-        android:text="457 и 56"
+        android:text="Проверить посетителей"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/addB"
+        android:id="@+id/check1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="СЛОЖИТЬ"
+        android:text="ПРОВЕРИТЬ"
         app:layout_constraintEnd_toEndOf="@+id/tvResult"
         app:layout_constraintStart_toStartOf="@+id/tvResult"
         app:layout_constraintTop_toBottomOf="@+id/tvResult" />
 
     <Button
-        android:id="@+id/subtractB"
+        android:id="@+id/check2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="ОТНЯТЬ"
-        app:layout_constraintEnd_toEndOf="@+id/addB"
-        app:layout_constraintStart_toStartOf="@+id/addB"
-        app:layout_constraintTop_toBottomOf="@+id/addB" />
+        android:text="ПРОВЕРИТЬ"
+        app:layout_constraintEnd_toEndOf="@+id/check1"
+        app:layout_constraintStart_toStartOf="@+id/check1"
+        app:layout_constraintTop_toBottomOf="@+id/check1" />
 
     <Button
-        android:id="@+id/multiplyB"
+        android:id="@+id/check3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="УМНОЖИТЬ"
-        app:layout_constraintEnd_toEndOf="@+id/subtractB"
-        app:layout_constraintStart_toStartOf="@+id/subtractB"
-        app:layout_constraintTop_toBottomOf="@+id/subtractB" />
+        android:text="ПРОВЕРИТЬ"
+        app:layout_constraintEnd_toEndOf="@+id/check2"
+        app:layout_constraintStart_toStartOf="@+id/check2"
+        app:layout_constraintTop_toBottomOf="@+id/check2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
