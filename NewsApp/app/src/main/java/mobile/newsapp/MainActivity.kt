@@ -13,36 +13,20 @@ import mobile.newsapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var mainBinding : ActivityMainBinding
-    val maxPerson = 90
-    val currentPerson = 91
-    val text = "кот"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        mainBinding.check1.setOnClickListener {
-            mainBinding.tvResult.setBackgroundColor(if (maxPerson > currentPerson) Color.GREEN else Color.RED)
-            if (maxPerson > currentPerson)
-                mainBinding.tvResult.text = "Все в порядке"
-            else
-                mainBinding.tvResult.text = "Превышено максимальное количество посетителей"
-        }
-
-        mainBinding.check2.setOnClickListener {
-            when(currentPerson) {
-                in 0..maxPerson -> mainBinding.tvResult.text = "Все в порядке"
-                else -> mainBinding.tvResult.text = "Превышено максимальное количество посетителей"
-            }
-        }
-
-        mainBinding.check3.setOnClickListener {
-            mainBinding.tvResult.text = when(text) {
-                "опасность" -> "опасность"
-                "не опасность" -> "не опасность"
-                "кот", "кошка" -> "кот, кошка"
-                else -> "непонятно"
+        mainBinding.btResult.setOnClickListener {
+            val resultValue = mainBinding.edValue.text.toString().toInt()
+            mainBinding.tvResult.visibility = View.VISIBLE
+            when(resultValue) {
+                in 0..1000 -> mainBinding.tvResult.text = "Вы начинающий блогер"
+                in 1001..100000 -> mainBinding.tvResult.text = "Вы средний блогер"
+                in 100001..1000000 -> mainBinding.tvResult.text = "Вы суперзвезда!"
+                else -> mainBinding.tvResult.text = "Вы нечто!"
             }
         }
     }
