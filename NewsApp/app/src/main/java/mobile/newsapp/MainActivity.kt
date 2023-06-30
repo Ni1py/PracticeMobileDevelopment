@@ -3,24 +3,37 @@ package mobile.newsapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import mobile.newsapp.data.api.ApiServices
+import mobile.newsapp.data.model.News
 import mobile.newsapp.databinding.ActivityMainBinding
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding : ActivityMainBinding
+    private val adapter = NewsAdapter()
+    private var newsList = List<News>(0) { News("", "") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+        init()
+    }
 
-        mainBinding.btGetNews.setOnClickListener {
-            makeApiRequest()
+    private fun init() {
+        mainBinding.apply {
+            rcView.layoutManager = LinearLayoutManager(this@MainActivity)
+            rcView.adapter = adapter
+            btGetNews.setOnClickListener {
+                makeApiRequest()
+                adapter.setNewsList(newsList)
+            }
         }
     }
 
@@ -35,14 +48,8 @@ class MainActivity : AppCompatActivity() {
             try {
                 val response = api.getNewsList()
                 Log.d("Main", "Success: ${response.success}")
-
                 runOnUiThread {
-                    mainBinding.tvId.text = response.data.news[0].id.toString()
-                    mainBinding.tvTitle.text = response.data.news[0].title
-                    mainBinding.tvImg.text = response.data.news[0].img
-                    mainBinding.tvDate.text = response.data.news[0].news_date
-                    mainBinding.tvAnnotation.text = response.data.news[0].annotation
-                    mainBinding.tvMobileUrl.text = response.data.news[0].mobile_url
+                    newsList = response.data.news
                 }
             } catch (e: Exception) {
                 Log.e("Main", "Error: ${e.message}")
