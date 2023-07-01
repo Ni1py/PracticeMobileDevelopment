@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import mobile.newsapp.adapter.NewsAdapter
 import mobile.newsapp.data.api.ApiServices
 import mobile.newsapp.data.model.News
 import mobile.newsapp.databinding.ActivityMainBinding
@@ -16,8 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding : ActivityMainBinding
-    private val adapter = NewsAdapter()
-    private var newsList = List<News>(0) { News("", "") }
+    private lateinit var adapter: NewsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +26,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        adapter = NewsAdapter()
         mainBinding.apply {
             rcView.layoutManager = LinearLayoutManager(this@MainActivity)
             rcView.adapter = adapter
             btGetNews.setOnClickListener {
                 makeApiRequest()
-                adapter.setNewsList(newsList)
             }
         }
     }
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 val response = api.getNewsList()
                 Log.d("Main", "Success: ${response.success}")
                 runOnUiThread {
-                    newsList = response.data.news
+                    adapter.submitList(response.data.news)
                 }
             } catch (e: Exception) {
                 Log.e("Main", "Error: ${e.message}")

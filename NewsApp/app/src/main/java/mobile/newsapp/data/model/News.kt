@@ -1,7 +1,7 @@
 package mobile.newsapp.data.model
 
 data class News(
-    //val id: Int,
+    val id: Int,
     val title: String,
     //val img: String,
     //val local_img: String,
@@ -10,5 +10,5 @@ data class News(
     //val id_resource: Int,
     //val type: Int,
     //val news_date_uts: Long,
-    //val mobile_url: String
+    val mobile_url: String
 )
