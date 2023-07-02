@@ -1,5 +1,7 @@
 package mobile.newsapp
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -76,7 +78,8 @@ class MainActivity : AppCompatActivity(), NewsAdapter.Listener {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCLick(news: NewsModel) {
-        Toast.makeText(this, "Нажали на: ${news.id}", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, ContentActivity::class.java).putExtra("news", news))
     }
 }
