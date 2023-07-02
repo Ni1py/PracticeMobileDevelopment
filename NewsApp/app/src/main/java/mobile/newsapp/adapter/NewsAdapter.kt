@@ -10,13 +10,16 @@ import mobile.newsapp.R
 import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter : ListAdapter<NewsModel, NewsAdapter.Holder>(Comparator()) {
+class NewsAdapter(private val listener: Listener) : ListAdapter<NewsModel, NewsAdapter.Holder>(Comparator()) {
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsItemBinding.bind(view)
 
-        fun bind (news: NewsModel) = with(binding) {
+        fun bind (news: NewsModel, listener: Listener) = with(binding) {
             tvTitle.text = news.title
             tvAnnotation.text = news.annotation
+            cvItem.setOnClickListener {
+                listener.onCLick(news)
+            }
         }
     }
 
@@ -37,6 +40,10 @@ class NewsAdapter : ListAdapter<NewsModel, NewsAdapter.Holder>(Comparator()) {
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), listener)
+    }
+
+    interface Listener {
+        fun onCLick(news: NewsModel)
     }
 }

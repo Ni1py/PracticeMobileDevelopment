@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +20,7 @@ import mobile.newsapp.databinding.ActivityMainBinding
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NewsAdapter.Listener {
     private lateinit var mainBinding : ActivityMainBinding
     private lateinit var adapter: NewsAdapter
     private lateinit var db: MainDb
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         db = MainDb.getDb(this)
-        adapter = NewsAdapter()
+        adapter = NewsAdapter(this)
         db.getDao().getAllNews().asLiveData().observe(this) {list ->
             adapter.submitList(list.map { NewsModel.fromNewsEntity(it) })
         }
@@ -73,5 +74,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("Main", "Error: ${e.message}")
             }
         }
+    }
+
+    override fun onCLick(news: NewsModel) {
+        Toast.makeText(this, "Нажали на: ${news.id}", Toast.LENGTH_SHORT).show()
     }
 }
