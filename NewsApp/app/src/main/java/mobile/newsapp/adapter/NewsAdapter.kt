@@ -7,25 +7,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import mobile.newsapp.R
-import mobile.newsapp.data.model.News
+import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter : ListAdapter<News, NewsAdapter.Holder>(Comparator()) {
+class NewsAdapter : ListAdapter<NewsModel, NewsAdapter.Holder>(Comparator()) {
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsItemBinding.bind(view)
 
-        fun bind (news: News) = with(binding) {
+        fun bind (news: NewsModel) = with(binding) {
             tvTitle.text = news.title
             tvAnnotation.text = news.annotation
         }
     }
 
-    class Comparator : DiffUtil.ItemCallback<News>() {
-        override fun areItemsTheSame(oldItem: News, newItem: News): Boolean {
+    class Comparator : DiffUtil.ItemCallback<NewsModel>() {
+        override fun areItemsTheSame(oldItem: NewsModel, newItem: NewsModel): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: News, newItem: News): Boolean {
+        override fun areContentsTheSame(oldItem: NewsModel, newItem: NewsModel): Boolean {
             return oldItem == newItem
         }
 

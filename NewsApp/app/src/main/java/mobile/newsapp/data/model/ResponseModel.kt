@@ -1,6 +1,6 @@
 package mobile.newsapp.data.model
 
-data class Response(
+data class ResponseModel (
     val success: Boolean,
-    val data: Data
+    val data: DataModel
 )

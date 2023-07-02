@@ -1,6 +1,8 @@
 package mobile.newsapp.data.model
 
-data class News(
+import mobile.newsapp.data.db.entity.NewsEntity
+
+data class NewsModel (
     val id: Int,
     val title: String,
     //val img: String,
@@ -11,4 +13,9 @@ data class News(
     //val type: Int,
     //val news_date_uts: Long,
     val mobile_url: String
-)
+) {
+    companion object {
+        fun fromNewsEntity (news: NewsEntity) =
+            NewsModel(news.id, news.title, news.annotation, news.mobile_url)
+    }
+}
