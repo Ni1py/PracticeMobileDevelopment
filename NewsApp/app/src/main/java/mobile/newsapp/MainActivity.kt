@@ -1,31 +1,31 @@
 package mobile.newsapp
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import mobile.newsapp.adapter.NewsAdapter
 import mobile.newsapp.data.api.ApiServices
 import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.ActivityMainBinding
+import mobile.newsapp.fragment.NewsContentFragment
+import mobile.newsapp.fragment.NewsListFragment
+import mobile.newsapp.viewModel.NewsViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MainActivity : AppCompatActivity(), NewsAdapter.Listener {
+class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding : ActivityMainBinding
-    private lateinit var adapter: NewsAdapter
     private lateinit var db: MainDb
+    private val newsViewModel: NewsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,22 +40,21 @@ class MainActivity : AppCompatActivity(), NewsAdapter.Listener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.refresh) {
-            makeApiRequest()
+        when (item.itemId) {
+            android.R.id.home -> newsViewModel.isClick.value = false
+            R.id.refresh -> makeApiRequest()
         }
         return true
     }
 
     private fun init() {
         db = MainDb.getDb(this)
-        adapter = NewsAdapter(this)
         db.getDao().getAllNews().asLiveData().observe(this) {list ->
-            adapter.submitList(list.map { NewsModel.fromNewsEntity(it) })
+            newsViewModel.newsList.value = list.map { NewsModel.fromNewsEntity(it) }
         }
-        mainBinding.apply {
-            rcView.layoutManager = LinearLayoutManager(this@MainActivity)
-            rcView.adapter = adapter
-        }
+        newsViewModel.isClick.value = false
+        openFragCondition()
+        displayHomeButton()
     }
 
     private fun makeApiRequest() {
@@ -78,8 +77,28 @@ class MainActivity : AppCompatActivity(), NewsAdapter.Listener {
         }
     }
 
-    @SuppressLint("RestrictedApi")
-    override fun onCLick(news: NewsModel) {
-        startActivity(Intent(this, ContentActivity::class.java).putExtra("news", news))
+    private fun openFrag(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.place_holder, fragment)
+            .commit()
+    }
+
+    private fun openFragCondition() {
+        newsViewModel.isClick.observe(this) {
+            if (it)
+                openFrag(NewsContentFragment.newInstance())
+            else
+                openFrag(NewsListFragment.newInstance())
+        }
+    }
+
+    private fun displayHomeButton() {
+        newsViewModel.isClick.observe(this) {
+            if (it)
+                supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            else
+                supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
     }
 }
