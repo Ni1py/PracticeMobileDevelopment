@@ -52,9 +52,9 @@ class MainActivity : AppCompatActivity() {
             newsViewModel.newsList.value = list
         }
         newsViewModel.isClickCard.value = false
+        newsViewModel.isClickHiddenButton.value = false
         newsViewModel.searchWord.value = ""
-        openFragCondition()
-        displayHomeButton()
+        replaceFragments()
         search()
         hide()
     }
@@ -100,21 +100,18 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    private fun openFragCondition() {
+    private fun replaceFragments() {
         newsViewModel.isClickCard.observe(this) {
-            if (it)
+            if (it) {
                 openFrag(NewsContentFragment.newInstance())
-            else
-                openFrag(NewsListFragment.newInstance())
-        }
-    }
-
-    private fun displayHomeButton() {
-        newsViewModel.isClickCard.observe(this) {
-            if (it)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            else
+                supportActionBar?.title = getString(R.string.content)
+            }
+            else {
+                openFrag(NewsListFragment.newInstance())
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
+                supportActionBar?.title = getString(R.string.app_name)
+            }
         }
     }
 
@@ -128,6 +125,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hide() {
+        TODO("Уточнить насчет обновления данных")
+//        var newsList = NewsEntity.getEmptyNews()
+//        newsViewModel.hiddenNews.observe(this) { news ->
+//            newsList = news
+//        }
         newsViewModel.isClickHiddenButton.observe(this) {isClick ->
             if (isClick) {
                 newsViewModel.hiddenNews.observe(this) { news ->

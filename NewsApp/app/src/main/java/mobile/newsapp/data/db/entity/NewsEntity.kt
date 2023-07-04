@@ -21,5 +21,6 @@ data class NewsEntity (
     companion object {
         fun fromNewsModel (hidden: Boolean, news: NewsModel) =
             NewsEntity(news.id, news.title, news.annotation, news.mobile_url, hidden)
+        fun getEmptyNews () = NewsEntity(-1, "", "", "", false)
     }
 }
