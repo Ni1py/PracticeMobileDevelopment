@@ -5,17 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView.OnQueryTextListener
+import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
+import mobile.newsapp.R
 import mobile.newsapp.adapter.NewsAdapter
 import mobile.newsapp.data.db.entity.NewsEntity
-import mobile.newsapp.databinding.FragmentNewsListBinding
+import mobile.newsapp.databinding.FragmentNewsHiddenListBinding
+import mobile.newsapp.databinding.FragmentNewsTapBinding
 import mobile.newsapp.viewModel.NewsViewModel
 
-class NewsListFragment : Fragment(), NewsAdapter.Listener {
-    private lateinit var binding: FragmentNewsListBinding
+class NewsHiddenListFragment : Fragment(), NewsAdapter.Listener {
+    private lateinit var binding: FragmentNewsHiddenListBinding
     private lateinit var adapter: NewsAdapter
     private val newsViewModel: NewsViewModel by activityViewModels()
 
@@ -23,19 +25,19 @@ class NewsListFragment : Fragment(), NewsAdapter.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentNewsListBinding.inflate(inflater)
+        binding = FragmentNewsHiddenListBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = NewsAdapter(this)
-        newsViewModel.newsList.observe(activity as LifecycleOwner) {
+        newsViewModel.newsHiddenList.observe(activity as LifecycleOwner) {
             adapter.submitList(it)
         }
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(context)
             rcView.adapter = adapter
-            svNews.setOnQueryTextListener(object : OnQueryTextListener {
+            svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(text: String?): Boolean {
                     return true
                 }
@@ -50,7 +52,7 @@ class NewsListFragment : Fragment(), NewsAdapter.Listener {
 
     companion object {
         @JvmStatic
-        fun newInstance() = NewsListFragment()
+        fun newInstance() = NewsHiddenListFragment()
     }
 
     override fun onCLickCard(news: NewsEntity) {

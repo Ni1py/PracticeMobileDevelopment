@@ -10,12 +10,14 @@ import mobile.newsapp.data.db.entity.NewsEntity
 
 @Dao
 interface Dao {
-    @Insert
-    fun insertNews(item: NewsEntity)
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllNews(newsList: List<NewsEntity>)
     @Query("SELECT * FROM news")
     fun getAllNews(): Flow<List<NewsEntity>>
+    @Query("SELECT * FROM news WHERE hidden = 0")
+    fun getVisibleNews(): Flow<List<NewsEntity>>
+    @Query("SELECT * FROM news WHERE hidden = 1")
+    fun getHiddenNews(): Flow<List<NewsEntity>>
     @Query("SELECT * FROM news WHERE title LIKE :search OR annotation LIKE :search")
     fun getNewsByTitleAnnotation(search: String): Flow<List<NewsEntity>>
     @Update

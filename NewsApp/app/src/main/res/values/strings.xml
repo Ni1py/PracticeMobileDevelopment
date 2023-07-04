@@ -4,4 +4,6 @@
     <string name="refresh_button">Refresh</string>
     <string name="text_on">Новость скрыта</string>
     <string name="text_off">Скрыть новость</string>
+    <string name="visible_news">Видимые</string>
+    <string name="hidden_news">Скрытые</string>
 </resources>

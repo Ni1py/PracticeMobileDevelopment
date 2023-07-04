@@ -9,6 +9,12 @@ open class NewsViewModel : ViewModel() {
     val newsList: MutableLiveData<List<NewsEntity>> by lazy {
         MutableLiveData<List<NewsEntity>>()
     }
+    val newsVisibleList: MutableLiveData<List<NewsEntity>> by lazy {
+        MutableLiveData<List<NewsEntity>>()
+    }
+    val newsHiddenList: MutableLiveData<List<NewsEntity>> by lazy {
+        MutableLiveData<List<NewsEntity>>()
+    }
     val currentNews: MutableLiveData<NewsEntity> by lazy {
         MutableLiveData<NewsEntity>()
     }

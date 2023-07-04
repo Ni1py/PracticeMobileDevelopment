@@ -16,7 +16,7 @@ import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.ActivityMainBinding
 import mobile.newsapp.fragment.NewsContentFragment
-import mobile.newsapp.fragment.NewsListFragment
+import mobile.newsapp.fragment.NewsTapFragment
 import mobile.newsapp.viewModel.NewsViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,8 +48,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         db = MainDb.getDb(this)
-        db.getDao().getAllNews().asLiveData().observe(this) {list ->
-            newsViewModel.newsList.value = list
+        db.getDao().getVisibleNews().asLiveData().observe(this) {list ->
+            newsViewModel.newsVisibleList.value = list
+        }
+        db.getDao().getHiddenNews().asLiveData().observe(this) {list ->
+            newsViewModel.newsHiddenList.value = list
         }
         newsViewModel.isClickCard.value = false
         newsViewModel.isClickHiddenButton.value = false
@@ -108,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.title = getString(R.string.content)
             }
             else {
-                openFrag(NewsListFragment.newInstance())
+                openFrag(NewsTapFragment.newInstance())
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 supportActionBar?.title = getString(R.string.app_name)
             }
@@ -125,19 +128,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hide() {
-        TODO("Уточнить насчет обновления данных")
-//        var newsList = NewsEntity.getEmptyNews()
-//        newsViewModel.hiddenNews.observe(this) { news ->
-//            newsList = news
-//        }
+        //TODO("Уточнить насчет обновления данных")
+        var newsList = NewsEntity.getEmptyNews()
+        newsViewModel.hiddenNews.observe(this) { news ->
+            newsList = news
+        }
         newsViewModel.isClickHiddenButton.observe(this) {isClick ->
             if (isClick) {
-                newsViewModel.hiddenNews.observe(this) { news ->
-                    if (news.hidden)
-                        sendHideRequest(news.copy(hidden = false))
+                //newsViewModel.hiddenNews.observe(this) { news ->
+                    if (newsList.hidden)
+                        sendHideRequest(newsList.copy(hidden = false))
                     else
-                        sendHideRequest(news.copy(hidden = true))
-                }
+                        sendHideRequest(newsList.copy(hidden = true))
+                //}
                 newsViewModel.isClickHiddenButton.value = false
             }
         }
