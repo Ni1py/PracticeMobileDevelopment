@@ -1,5 +1,6 @@
 package mobile.newsapp.adapter
 
+import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,28 +8,34 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import mobile.newsapp.R
+import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter(private val listener: Listener) : ListAdapter<NewsModel, NewsAdapter.Holder>(Comparator()) {
+class NewsAdapter(private val listener: Listener) : ListAdapter<NewsEntity, NewsAdapter.Holder>(Comparator()) {
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsItemBinding.bind(view)
 
-        fun bind (news: NewsModel, listener: Listener) = with(binding) {
+        fun bind (news: NewsEntity, listener: Listener) = with(binding) {
             tvTitle.text = news.title
             tvAnnotation.text = news.annotation
             cvItem.setOnClickListener {
-                listener.onCLick(news)
+                listener.onCLickCard(news)
             }
+            swHidden.setOnClickListener {
+                listener.onClickHiddenButton(news)
+            }
+            swHidden.isChecked = news.hidden
+            ivVisibility.setImageResource(if (swHidden.isChecked) R.drawable.ic_invisible else R.drawable.ic_visible)
         }
     }
 
-    class Comparator : DiffUtil.ItemCallback<NewsModel>() {
-        override fun areItemsTheSame(oldItem: NewsModel, newItem: NewsModel): Boolean {
+    class Comparator : DiffUtil.ItemCallback<NewsEntity>() {
+        override fun areItemsTheSame(oldItem: NewsEntity, newItem: NewsEntity): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: NewsModel, newItem: NewsModel): Boolean {
+        override fun areContentsTheSame(oldItem: NewsEntity, newItem: NewsEntity): Boolean {
             return oldItem == newItem
         }
 
@@ -44,6 +51,7 @@ class NewsAdapter(private val listener: Listener) : ListAdapter<NewsModel, NewsA
     }
 
     interface Listener {
-        fun onCLick(news: NewsModel)
+        fun onCLickCard(news: NewsEntity)
+        fun onClickHiddenButton(news: NewsEntity)
     }
 }

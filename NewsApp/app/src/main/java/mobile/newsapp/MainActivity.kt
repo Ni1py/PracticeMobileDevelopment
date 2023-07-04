@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import mobile.newsapp.data.api.ApiServices
 import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
-import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.ActivityMainBinding
 import mobile.newsapp.fragment.NewsContentFragment
 import mobile.newsapp.fragment.NewsListFragment
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> newsViewModel.isClick.value = false
+            android.R.id.home -> newsViewModel.isClickCard.value = false
             R.id.refresh -> makeApiRequest()
         }
         return true
@@ -50,13 +49,14 @@ class MainActivity : AppCompatActivity() {
     private fun init() {
         db = MainDb.getDb(this)
         db.getDao().getAllNews().asLiveData().observe(this) {list ->
-            newsViewModel.newsList.value = list.map { NewsModel.fromNewsEntity(it) }
+            newsViewModel.newsList.value = list
         }
-        newsViewModel.isClick.value = false
+        newsViewModel.isClickCard.value = false
         newsViewModel.searchWord.value = ""
         openFragCondition()
         displayHomeButton()
         search()
+        hide()
     }
 
     private fun makeApiRequest() {
@@ -66,11 +66,25 @@ class MainActivity : AppCompatActivity() {
             .build()
             .create(ApiServices::class.java)
 
+        var listHiddenNews = listOf<Int>()
+        newsViewModel.newsList.observe(this) {newsList ->
+            listHiddenNews = newsList.map { news ->
+                if (news.hidden)
+                    news.id
+                else
+                    -1
+            }
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = api.getNewsList()
+                db.getDao().deleteNews()
                 db.getDao().insertAllNews(response.data.news.map {
-                        NewsEntity.fromNewsModel(false, it)
+                        NewsEntity.fromNewsModel(
+                            it.id in listHiddenNews,
+                            it
+                        )
                     })
                 Log.d("Main", "Success: ${response.success}")
             } catch (e: Exception) {
@@ -87,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openFragCondition() {
-        newsViewModel.isClick.observe(this) {
+        newsViewModel.isClickCard.observe(this) {
             if (it)
                 openFrag(NewsContentFragment.newInstance())
             else
@@ -96,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayHomeButton() {
-        newsViewModel.isClick.observe(this) {
+        newsViewModel.isClickCard.observe(this) {
             if (it)
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
             else
@@ -108,8 +122,33 @@ class MainActivity : AppCompatActivity() {
         newsViewModel.searchWord.observe(this) {word ->
             if (word.isNotEmpty())
                 db.getDao().getNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                    newsViewModel.newsList.value = list.map { NewsModel.fromNewsEntity(it) }
+                    newsViewModel.newsList.value = list
                 }
+        }
+    }
+
+    private fun hide() {
+        newsViewModel.isClickHiddenButton.observe(this) {isClick ->
+            if (isClick) {
+                newsViewModel.hiddenNews.observe(this) { news ->
+                    if (news.hidden)
+                        sendHideRequest(news.copy(hidden = false))
+                    else
+                        sendHideRequest(news.copy(hidden = true))
+                }
+                newsViewModel.isClickHiddenButton.value = false
+            }
+        }
+    }
+
+    private fun sendHideRequest(news: NewsEntity) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                db.getDao().updateHidden(news)
+                Log.d("Main", "Success update")
+            } catch (e: Exception) {
+                Log.e("Main", "Error: ${e.message}")
+            }
         }
     }
 }

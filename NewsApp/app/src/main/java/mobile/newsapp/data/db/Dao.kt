@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import mobile.newsapp.data.db.entity.NewsEntity
 
@@ -17,4 +18,8 @@ interface Dao {
     fun getAllNews(): Flow<List<NewsEntity>>
     @Query("SELECT * FROM news WHERE title LIKE :search OR annotation LIKE :search")
     fun getNewsByTitleAnnotation(search: String): Flow<List<NewsEntity>>
+    @Update
+    fun updateHidden(item: NewsEntity)
+    @Query("DELETE FROM news")
+    fun deleteNews()
 }

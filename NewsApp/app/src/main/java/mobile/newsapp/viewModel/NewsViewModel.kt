@@ -2,17 +2,24 @@ package mobile.newsapp.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.data.model.NewsModel
 
 open class NewsViewModel : ViewModel() {
-    val newsList: MutableLiveData<List<NewsModel>> by lazy {
-        MutableLiveData<List<NewsModel>>()
+    val newsList: MutableLiveData<List<NewsEntity>> by lazy {
+        MutableLiveData<List<NewsEntity>>()
     }
-    val currentNews: MutableLiveData<NewsModel> by lazy {
-        MutableLiveData<NewsModel>()
+    val currentNews: MutableLiveData<NewsEntity> by lazy {
+        MutableLiveData<NewsEntity>()
     }
-    val isClick: MutableLiveData<Boolean> by lazy {
+    val isClickCard: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
+    }
+    val isClickHiddenButton: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
+    }
+    val hiddenNews: MutableLiveData<NewsEntity> by lazy {
+        MutableLiveData<NewsEntity>()
     }
     val searchWord: MutableLiveData<String> by lazy {
         MutableLiveData<String>()

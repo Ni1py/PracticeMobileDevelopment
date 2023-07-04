@@ -5,13 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView.OnCloseListener
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import mobile.newsapp.adapter.NewsAdapter
-import mobile.newsapp.data.model.NewsModel
+import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.FragmentNewsListBinding
 import mobile.newsapp.viewModel.NewsViewModel
 
@@ -54,8 +53,13 @@ class NewsListFragment : Fragment(), NewsAdapter.Listener {
         fun newInstance() = NewsListFragment()
     }
 
-    override fun onCLick(news: NewsModel) {
-        newsViewModel.isClick.value = true
+    override fun onCLickCard(news: NewsEntity) {
+        newsViewModel.isClickCard.value = true
         newsViewModel.currentNews.value = news
+    }
+
+    override fun onClickHiddenButton(news: NewsEntity) {
+        newsViewModel.isClickHiddenButton.value = true
+        newsViewModel.hiddenNews.value = news
     }
 }

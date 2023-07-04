@@ -11,7 +11,6 @@ import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
-import mobile.newsapp.R
 import mobile.newsapp.databinding.FragmentNewsContentBinding
 import mobile.newsapp.viewModel.NewsViewModel
 
