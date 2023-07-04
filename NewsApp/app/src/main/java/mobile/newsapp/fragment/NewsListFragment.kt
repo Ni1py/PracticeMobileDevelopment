@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnCloseListener
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +36,16 @@ class NewsListFragment : Fragment(), NewsAdapter.Listener {
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(context)
             rcView.adapter = adapter
+            svNews.setOnQueryTextListener(object : OnQueryTextListener {
+                override fun onQueryTextSubmit(text: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(text: String?): Boolean {
+                    newsViewModel.searchWord.value = "%$text%"
+                    return true
+                }
+            })
         }
     }
 

@@ -53,8 +53,10 @@ class MainActivity : AppCompatActivity() {
             newsViewModel.newsList.value = list.map { NewsModel.fromNewsEntity(it) }
         }
         newsViewModel.isClick.value = false
+        newsViewModel.searchWord.value = ""
         openFragCondition()
         displayHomeButton()
+        search()
     }
 
     private fun makeApiRequest() {
@@ -99,6 +101,15 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.setDisplayHomeAsUpEnabled(true)
             else
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        }
+    }
+
+    private fun search() {
+        newsViewModel.searchWord.observe(this) {word ->
+            if (word.isNotEmpty())
+                db.getDao().getNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
+                    newsViewModel.newsList.value = list.map { NewsModel.fromNewsEntity(it) }
+                }
         }
     }
 }

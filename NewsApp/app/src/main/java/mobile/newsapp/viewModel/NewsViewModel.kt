@@ -14,4 +14,7 @@ open class NewsViewModel : ViewModel() {
     val isClick: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
+    val searchWord: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 }

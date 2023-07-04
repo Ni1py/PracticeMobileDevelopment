@@ -15,4 +15,6 @@ interface Dao {
     fun insertAllNews(newsList: List<NewsEntity>)
     @Query("SELECT * FROM news")
     fun getAllNews(): Flow<List<NewsEntity>>
+    @Query("SELECT * FROM news WHERE title LIKE :search OR annotation LIKE :search")
+    fun getNewsByTitleAnnotation(search: String): Flow<List<NewsEntity>>
 }
