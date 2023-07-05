@@ -43,7 +43,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="TextView" />
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="TextView"
+                android:textColor="#4B2251"
+                android:textSize="16sp"
+                android:textStyle="italic" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,6 +65,8 @@
 
                 <Switch
                     android:id="@+id/swHidden"
+                    android:thumb="@drawable/switch_custom_thumb_selector"
+                    android:track="@drawable/switch_custom_track_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textOff="@string/text_off"
