@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             else {
                 openFrag(NewsTapFragment.newInstance())
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                supportActionBar?.title = getString(R.string.app_name)
+                supportActionBar?.title = getString(R.string.app_name).uppercase()
             }
         }
     }

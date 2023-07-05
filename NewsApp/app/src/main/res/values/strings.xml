@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">НОВОСТИ</string>
+    <string name="app_name">Новости</string>
     <string name="content">СОДЕРЖАНИЕ</string>
     <string name="refresh_button">Refresh</string>
     <string name="text_on">Новость скрыта</string>
     <string name="text_off">Скрыть новость</string>
     <string name="visible_news">Видимые</string>
     <string name="hidden_news">Скрытые</string>
+    <string name="search_news">Искать новости…</string>
 </resources>
