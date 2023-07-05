@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
@@ -43,7 +44,7 @@ class NewsHiddenListFragment : Fragment(), NewsAdapter.Listener {
                 }
 
                 override fun onQueryTextChange(text: String?): Boolean {
-                    newsViewModel.searchWord.value = "%$text%"
+                    newsViewModel.searchHiddenWord.value = "%$text%"
                     return true
                 }
             })

@@ -27,7 +27,10 @@ open class NewsViewModel : ViewModel() {
     val hiddenNews: MutableLiveData<NewsEntity> by lazy {
         MutableLiveData<NewsEntity>()
     }
-    val searchWord: MutableLiveData<String> by lazy {
+    val searchVisibleWord: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+    val searchHiddenWord: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 }

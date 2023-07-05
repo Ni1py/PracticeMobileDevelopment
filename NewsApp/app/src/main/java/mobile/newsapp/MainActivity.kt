@@ -56,7 +56,8 @@ class MainActivity : AppCompatActivity() {
         }
         newsViewModel.isClickCard.value = false
         newsViewModel.isClickHiddenButton.value = false
-        newsViewModel.searchWord.value = ""
+        newsViewModel.searchVisibleWord.value = ""
+        newsViewModel.searchHiddenWord.value = ""
         replaceFragments()
         search()
         hide()
@@ -119,31 +120,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        newsViewModel.searchWord.observe(this) {word ->
-            if (word.isNotEmpty())
-                db.getDao().getNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                    newsViewModel.newsList.value = list
-                }
+        newsViewModel.searchVisibleWord.observe(this) {word ->
+            updateSearchNews(word, false)
+        }
+        newsViewModel.searchHiddenWord.observe(this) {word ->
+            updateSearchNews(word, true)
         }
     }
 
     private fun hide() {
         //TODO("Уточнить насчет обновления данных")
-        var newsList = NewsEntity.getEmptyNews()
-        newsViewModel.hiddenNews.observe(this) { news ->
-            newsList = news
-        }
+//        var newsList = NewsEntity.getEmptyNews()
+//        newsViewModel.hiddenNews.observe(this) { news ->
+//            newsList = news
+//        }
         newsViewModel.isClickHiddenButton.observe(this) {isClick ->
             if (isClick) {
-                //newsViewModel.hiddenNews.observe(this) { news ->
-                    if (newsList.hidden)
-                        sendHideRequest(newsList.copy(hidden = false))
+                newsViewModel.hiddenNews.observe(this) { news ->
+                    if (news.hidden)
+                        sendHideRequest(news.copy(hidden = false))
                     else
-                        sendHideRequest(newsList.copy(hidden = true))
-                //}
+                        sendHideRequest(news.copy(hidden = true))
+                }
                 newsViewModel.isClickHiddenButton.value = false
             }
         }
+    }
+
+    private fun updateSearchNews(word: String, isHidden: Boolean) {
+        if (isHidden)
+            db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
+                newsViewModel.newsHiddenList.value = list
+            }
+        else
+            db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
+                newsViewModel.newsVisibleList.value = list
+            }
     }
 
     private fun sendHideRequest(news: NewsEntity) {

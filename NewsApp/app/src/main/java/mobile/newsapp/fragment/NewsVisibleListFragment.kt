@@ -43,7 +43,7 @@ class NewsVisibleListFragment : Fragment(), NewsAdapter.Listener {
                 }
 
                 override fun onQueryTextChange(text: String?): Boolean {
-                    newsViewModel.searchWord.value = "%$text%"
+                    newsViewModel.searchVisibleWord.value = "%$text%"
                     return true
                 }
             })
