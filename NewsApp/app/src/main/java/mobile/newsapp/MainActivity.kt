@@ -148,14 +148,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateSearchNews(word: String, isHidden: Boolean) {
-        if (isHidden)
-            db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                newsViewModel.newsHiddenList.value = list
-            }
-        else
-            db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                newsViewModel.newsVisibleList.value = list
-            }
+        if (word.isNotEmpty())
+            if (isHidden)
+                db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
+                    newsViewModel.newsHiddenList.value = list
+                }
+            else
+                db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
+                    newsViewModel.newsVisibleList.value = list
+                }
     }
 
     private fun sendHideRequest(news: NewsEntity) {
