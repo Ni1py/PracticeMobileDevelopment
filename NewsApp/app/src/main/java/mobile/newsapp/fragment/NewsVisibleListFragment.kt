@@ -61,7 +61,6 @@ class NewsVisibleListFragment : Fragment(), NewsAdapter.Listener {
     }
 
     override fun onClickHiddenButton(news: NewsEntity) {
-        newsViewModel.isClickHiddenButton.value = true
         newsViewModel.hiddenNews.value = news
     }
 }

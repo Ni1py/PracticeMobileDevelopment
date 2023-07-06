@@ -54,8 +54,9 @@ class MainActivity : AppCompatActivity() {
         db.getDao().getHiddenNews().asLiveData().observe(this) {list ->
             newsViewModel.newsHiddenList.value = list
         }
+        newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
         newsViewModel.isClickCard.value = false
-        newsViewModel.isClickHiddenButton.value = false
+        //newsViewModel.isClickHiddenButton.value = false
         newsViewModel.searchVisibleWord.value = ""
         newsViewModel.searchHiddenWord.value = ""
         replaceFragments()
@@ -129,21 +130,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hide() {
-        //TODO("Уточнить насчет обновления данных")
-//        var newsList = NewsEntity.getEmptyNews()
-//        newsViewModel.hiddenNews.observe(this) { news ->
-//            newsList = news
-//        }
-        newsViewModel.isClickHiddenButton.observe(this) {isClick ->
-            if (isClick) {
-                newsViewModel.hiddenNews.observe(this) { news ->
-                    if (news.hidden)
-                        sendHideRequest(news.copy(hidden = false))
-                    else
-                        sendHideRequest(news.copy(hidden = true))
-                }
-                newsViewModel.isClickHiddenButton.value = false
-            }
+        newsViewModel.hiddenNews.observe(this) { news ->
+            if (news.id != -1)
+                if (news.hidden)
+                    sendHideRequest(news.copy(hidden = false))
+                else
+                    sendHideRequest(news.copy(hidden = true))
         }
     }
 

@@ -21,9 +21,6 @@ open class NewsViewModel : ViewModel() {
     val isClickCard: MutableLiveData<Boolean> by lazy {
         MutableLiveData<Boolean>()
     }
-    val isClickHiddenButton: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
     val hiddenNews: MutableLiveData<NewsEntity> by lazy {
         MutableLiveData<NewsEntity>()
     }
