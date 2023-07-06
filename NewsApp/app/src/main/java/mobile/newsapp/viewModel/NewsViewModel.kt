@@ -3,7 +3,6 @@ package mobile.newsapp.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import mobile.newsapp.data.db.entity.NewsEntity
-import mobile.newsapp.data.model.NewsModel
 
 open class NewsViewModel : ViewModel() {
     val newsList: MutableLiveData<List<NewsEntity>> by lazy {

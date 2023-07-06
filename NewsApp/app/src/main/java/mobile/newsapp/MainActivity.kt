@@ -11,6 +11,7 @@ import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import mobile.newsapp.constants.Constants
 import mobile.newsapp.data.api.ApiServices
 import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
@@ -56,9 +57,8 @@ class MainActivity : AppCompatActivity() {
         }
         newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
         newsViewModel.isClickCard.value = false
-        //newsViewModel.isClickHiddenButton.value = false
-        newsViewModel.searchVisibleWord.value = ""
-        newsViewModel.searchHiddenWord.value = ""
+        newsViewModel.searchVisibleWord.value = Constants.EMPTY_STRING
+        newsViewModel.searchHiddenWord.value = Constants.EMPTY_STRING
         replaceFragments()
         search()
         hide()
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 if (news.hidden)
                     news.id
                 else
-                    -1
+                    Constants.NEGATIVE_ID
             }
         }
 
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun hide() {
         newsViewModel.hiddenNews.observe(this) { news ->
-            if (news.id != -1)
+            if (news.id != Constants.NEGATIVE_ID)
                 if (news.hidden)
                     sendHideRequest(news.copy(hidden = false))
                 else

@@ -1,6 +1,5 @@
 package mobile.newsapp.adapter
 
-import android.provider.Settings.Global.getString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import mobile.newsapp.R
 import mobile.newsapp.data.db.entity.NewsEntity
-import mobile.newsapp.data.model.NewsModel
 import mobile.newsapp.databinding.NewsItemBinding
 
 class NewsAdapter(private val listener: Listener) : ListAdapter<NewsEntity, NewsAdapter.Holder>(Comparator()) {

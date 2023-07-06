@@ -5,16 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
-import mobile.newsapp.R
 import mobile.newsapp.adapter.NewsAdapter
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.FragmentNewsHiddenListBinding
-import mobile.newsapp.databinding.FragmentNewsTapBinding
 import mobile.newsapp.viewModel.NewsViewModel
 
 class NewsHiddenListFragment : Fragment(), NewsAdapter.Listener {
@@ -25,7 +22,7 @@ class NewsHiddenListFragment : Fragment(), NewsAdapter.Listener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNewsHiddenListBinding.inflate(inflater)
         return binding.root
     }

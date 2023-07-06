@@ -3,6 +3,7 @@ package mobile.newsapp.data.db.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import mobile.newsapp.constants.Constants
 import mobile.newsapp.data.model.NewsModel
 
 @Entity (tableName = "news")
@@ -21,6 +22,10 @@ data class NewsEntity (
     companion object {
         fun fromNewsModel (hidden: Boolean, news: NewsModel) =
             NewsEntity(news.id, news.title, news.annotation, news.mobile_url, hidden)
-        fun getEmptyNews () = NewsEntity(-1, "", "", "", false)
+        fun getEmptyNews () = NewsEntity(Constants.NEGATIVE_ID,
+            Constants.EMPTY_STRING,
+            Constants.EMPTY_STRING,
+            Constants.EMPTY_STRING,
+            false)
     }
 }
