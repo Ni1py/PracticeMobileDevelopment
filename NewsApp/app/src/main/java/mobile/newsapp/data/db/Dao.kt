@@ -12,8 +12,6 @@ import mobile.newsapp.data.db.entity.NewsEntity
 interface Dao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllNews(newsList: List<NewsEntity>)
-    @Query("SELECT * FROM news")
-    fun getAllNews(): Flow<List<NewsEntity>>
     @Query("SELECT * FROM news WHERE hidden = 0")
     fun getVisibleNews(): Flow<List<NewsEntity>>
     @Query("SELECT * FROM news WHERE hidden = 1")

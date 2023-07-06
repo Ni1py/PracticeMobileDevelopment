@@ -71,14 +71,9 @@ class MainActivity : AppCompatActivity() {
             .build()
             .create(ApiServices::class.java)
 
-        var listHiddenNews = listOf<Int>()
-        newsViewModel.newsList.observe(this) {newsList ->
-            listHiddenNews = newsList.map { news ->
-                if (news.hidden)
-                    news.id
-                else
-                    Constants.NEGATIVE_ID
-            }
+        var listHiddenNewsId = listOf<Int>()
+        db.getDao().getHiddenNews().asLiveData().observe(this) {listHiddenNews ->
+            listHiddenNewsId = listHiddenNews.map {it.id}
         }
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -86,10 +81,7 @@ class MainActivity : AppCompatActivity() {
                 val response = api.getNewsList()
                 db.getDao().deleteNews()
                 db.getDao().insertAllNews(response.data.news.map {
-                        NewsEntity.fromNewsModel(
-                            it.id in listHiddenNews,
-                            it
-                        )
+                        NewsEntity.fromNewsModel(it.id in listHiddenNewsId, it)
                     })
                 Log.d("Main", "Success: ${response.success}")
             } catch (e: Exception) {

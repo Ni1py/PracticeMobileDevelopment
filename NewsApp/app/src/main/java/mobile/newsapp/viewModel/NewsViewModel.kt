@@ -5,9 +5,6 @@ import androidx.lifecycle.ViewModel
 import mobile.newsapp.data.db.entity.NewsEntity
 
 open class NewsViewModel : ViewModel() {
-    val newsList: MutableLiveData<List<NewsEntity>> by lazy {
-        MutableLiveData<List<NewsEntity>>()
-    }
     val newsVisibleList: MutableLiveData<List<NewsEntity>> by lazy {
         MutableLiveData<List<NewsEntity>>()
     }
