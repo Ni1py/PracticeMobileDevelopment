@@ -123,11 +123,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun hide() {
         newsViewModel.hiddenNews.observe(this) { news ->
-            if (news.id != Constants.NEGATIVE_ID)
+            if (news.id != Constants.NEGATIVE_ID) {
                 if (news.hidden)
                     sendHideRequest(news.copy(hidden = false))
                 else
                     sendHideRequest(news.copy(hidden = true))
+                newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
+            }
         }
     }
 
