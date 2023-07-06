@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayoutMediator
 import mobile.newsapp.adapter.NewsListsViewPagerAdapter
-import mobile.newsapp.databinding.FragmentNewsTapBinding
+import mobile.newsapp.databinding.FragmentNewsTabBinding
 
-class NewsTapFragment : Fragment() {
-    private lateinit var binding: FragmentNewsTapBinding
+class NewsTabFragment : Fragment() {
+    private lateinit var binding: FragmentNewsTabBinding
     private lateinit var adapter: NewsListsViewPagerAdapter
     private val fragList = listOf<Fragment>(
         NewsVisibleListFragment.newInstance(),
@@ -25,7 +25,7 @@ class NewsTapFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewsTapBinding.inflate(inflater)
+        binding = FragmentNewsTabBinding.inflate(inflater)
         return binding.root
     }
 
@@ -39,6 +39,6 @@ class NewsTapFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = NewsTapFragment()
+        fun newInstance() = NewsTabFragment()
     }
 }

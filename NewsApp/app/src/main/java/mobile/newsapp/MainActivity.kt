@@ -17,7 +17,7 @@ import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.ActivityMainBinding
 import mobile.newsapp.fragment.NewsContentFragment
-import mobile.newsapp.fragment.NewsTapFragment
+import mobile.newsapp.fragment.NewsTabFragment
 import mobile.newsapp.viewModel.NewsViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                 supportActionBar?.title = getString(R.string.content)
             }
             else {
-                openFrag(NewsTapFragment.newInstance())
+                openFrag(NewsTabFragment.newInstance())
                 supportActionBar?.setDisplayHomeAsUpEnabled(false)
                 supportActionBar?.title = getString(R.string.app_name).uppercase()
             }
