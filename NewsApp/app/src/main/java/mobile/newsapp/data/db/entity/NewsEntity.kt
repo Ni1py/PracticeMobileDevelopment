@@ -12,6 +12,8 @@ data class NewsEntity (
     var id: Int,
     @ColumnInfo(name = "title")
     var title: String,
+    @ColumnInfo(name = "img")
+    var img: String,
     @ColumnInfo(name = "annotation")
     var annotation: String,
     @ColumnInfo(name = "mobile_url")
@@ -21,11 +23,13 @@ data class NewsEntity (
 ) {
     companion object {
         fun fromNewsModel (hidden: Boolean, news: NewsModel) =
-            NewsEntity(news.id, news.title, news.annotation, news.mobile_url, hidden)
+            NewsEntity(news.id, news.title, news.img, news.annotation, news.mobile_url, hidden)
         fun getEmptyNews () = NewsEntity(Constants.NEGATIVE_ID,
+            Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
             false)
     }
+    fun getTitleWithQuotes() = "\"$title\""
 }

@@ -3,19 +3,25 @@ package mobile.newsapp.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import mobile.newsapp.R
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter(private val listener: Listener) : ListAdapter<NewsEntity, NewsAdapter.Holder>(Comparator()) {
+class NewsAdapter(
+    private val listener: Listener,
+    private val fragment: Fragment
+    ) : ListAdapter<NewsEntity, NewsAdapter.Holder>(Comparator()) {
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsItemBinding.bind(view)
 
-        fun bind (news: NewsEntity, listener: Listener) = with(binding) {
-            tvTitle.text = news.title
+        fun bind (news: NewsEntity, listener: Listener, fragment: Fragment) = with(binding) {
+            Glide.with(fragment).load(news.img).into(newsImage);
+            tvTitle.text = news.getTitleWithQuotes()
             tvAnnotation.text = news.annotation
             cvItem.setOnClickListener {
                 listener.onCLickCard(news)
@@ -45,7 +51,7 @@ class NewsAdapter(private val listener: Listener) : ListAdapter<NewsEntity, News
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(getItem(position), listener)
+        holder.bind(getItem(position), listener, fragment)
     }
 
     interface Listener {

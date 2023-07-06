@@ -28,7 +28,7 @@ class NewsVisibleListFragment : Fragment(), NewsAdapter.Listener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        adapter = NewsAdapter(this)
+        adapter = NewsAdapter(this, this)
         newsViewModel.newsVisibleList.observe(activity as LifecycleOwner) {
             adapter.submitList(it)
         }

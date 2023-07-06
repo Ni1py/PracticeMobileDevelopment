@@ -33,7 +33,7 @@ class NewsTabFragment : Fragment() {
         adapter = NewsListsViewPagerAdapter(requireActivity(), fragList)
         binding.vpNewsList.adapter = adapter
         TabLayoutMediator(binding.newsListsTab, binding.vpNewsList) {
-            tab, pos -> tab.text = fragListTitles[pos]
+            tab, pos -> tab.text = fragListTitles[pos].uppercase()
         }.attach()
     }
 
