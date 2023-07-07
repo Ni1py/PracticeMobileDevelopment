@@ -14,6 +14,8 @@ data class NewsEntity (
     var title: String,
     @ColumnInfo(name = "img")
     var img: String,
+    @ColumnInfo(name = "news_date")
+    var news_date: String,
     @ColumnInfo(name = "annotation")
     var annotation: String,
     @ColumnInfo(name = "mobile_url")
@@ -23,12 +25,17 @@ data class NewsEntity (
 ) {
     companion object {
         fun fromNewsModel (hidden: Boolean, news: NewsModel) =
-            NewsEntity(news.id, news.title, news.img, news.annotation, news.mobile_url, hidden)
-        fun getEmptyNews () = NewsEntity(Constants.NEGATIVE_ID,
+            NewsEntity(news.id, news.title,
+                news.img, news.news_date,
+                news.annotation, news.mobile_url, hidden)
+        fun getEmptyNews() = NewsEntity(
+            Constants.NEGATIVE_ID,
             Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
             Constants.EMPTY_STRING,
-            false)
+            Constants.EMPTY_STRING,
+            false
+        )
     }
 }

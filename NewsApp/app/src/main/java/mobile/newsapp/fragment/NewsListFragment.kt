@@ -1,12 +1,14 @@
 package mobile.newsapp.fragment
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import mobile.newsapp.adapter.NewsRecyclerViewAdapter
@@ -14,6 +16,8 @@ import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.FragmentNewsListBinding
 import mobile.newsapp.extension.withPercentages
 import mobile.newsapp.viewModel.NewsViewModel
+import java.time.LocalDate
+import java.util.Collections.sort
 
 private const val IS_HIDDEN = "isHidden"
 
@@ -39,13 +43,20 @@ class NewsListFragment : Fragment(), NewsRecyclerViewAdapter.Listener {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adapter = NewsRecyclerViewAdapter(this, this)
         adapter.apply {
             if (isHidden)
-                newsViewModel.newsHiddenList.observe(requireActivity()) { list -> submitList(list) }
+                newsViewModel.newsHiddenList.observe(requireActivity())
+                { list ->
+                    sortByDate(list)
+                    submitList(list) }
             else
-                newsViewModel.newsVisibleList.observe(requireActivity()) { list -> submitList(list) }
+                newsViewModel.newsVisibleList.observe(requireActivity())
+                { list ->
+                    sortByDate(list)
+                    submitList(list) }
         }
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(context)
@@ -61,6 +72,12 @@ class NewsListFragment : Fragment(), NewsRecyclerViewAdapter.Listener {
             })
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sortByDate (list: List<NewsEntity>) =
+        sort(list) { element1, element2 ->
+            LocalDate.parse(element2.news_date).compareTo(LocalDate.parse(element1.news_date))
+        }
 
     companion object {
         @JvmStatic
