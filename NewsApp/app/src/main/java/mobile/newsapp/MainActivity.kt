@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         init()
+        replaceFragments()
+        search()
+        hide()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -41,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> newsViewModel.isClickCard.value = false
+            android.R.id.home -> newsViewModel.currentNews.value = NewsEntity.getEmptyNews()
             R.id.refresh -> makeApiRequest()
         }
         return true
@@ -49,40 +54,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         db = MainDb.getDb(this)
-        db.getDao().getVisibleNews().asLiveData().observe(this) {list ->
-            newsViewModel.newsVisibleList.value = list
-        }
-        db.getDao().getHiddenNews().asLiveData().observe(this) {list ->
-            newsViewModel.newsHiddenList.value = list
-        }
+        db.getDao().getVisibleNews().asLiveData().observe(this)
+        { list -> newsViewModel.newsVisibleList.value = list }
+        db.getDao().getHiddenNews().asLiveData().observe(this)
+        { list -> newsViewModel.newsHiddenList.value = list }
         newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
-        newsViewModel.isClickCard.value = false
+        newsViewModel.currentNews.value = NewsEntity.getEmptyNews()
         newsViewModel.searchVisibleWord.value = Constants.EMPTY_STRING
         newsViewModel.searchHiddenWord.value = Constants.EMPTY_STRING
-        replaceFragments()
-        search()
-        hide()
     }
 
     private fun makeApiRequest() {
         val api = Retrofit.Builder()
-            .baseUrl("https://ws-tszh-1c-test.vdgb-soft.ru")
+            .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiServices::class.java)
 
         var listHiddenNewsId = listOf<Int>()
-        db.getDao().getHiddenNews().asLiveData().observe(this) {listHiddenNews ->
-            listHiddenNewsId = listHiddenNews.map {it.id}
-        }
+        db.getDao().getHiddenNews().asLiveData().observe(this)
+        { listHiddenNews -> listHiddenNewsId = listHiddenNews.map {it.id} }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = api.getNewsList()
                 db.getDao().deleteNews()
-                db.getDao().insertAllNews(response.data.news.map {
-                        NewsEntity.fromNewsModel(it.id in listHiddenNewsId, it)
-                    })
+                db.getDao().insertAllNews(response.data.news.map {newsModel ->
+                        NewsEntity.fromNewsModel(
+                            newsModel.id in listHiddenNewsId,
+                            newsModel) })
                 Log.d("Main", "Success: ${response.success}")
             } catch (e: Exception) {
                 Log.e("Main", "Error: ${e.message}")
@@ -98,27 +98,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun replaceFragments() {
-        newsViewModel.isClickCard.observe(this) {
-            if (it) {
-                openFrag(NewsContentFragment.newInstance())
-                supportActionBar?.setDisplayHomeAsUpEnabled(true)
-                supportActionBar?.title = getString(R.string.content)
-            }
-            else {
-                openFrag(NewsTabFragment.newInstance())
-                supportActionBar?.setDisplayHomeAsUpEnabled(false)
-                supportActionBar?.title = getString(R.string.app_name).uppercase()
+        newsViewModel.currentNews.observe(this) {news ->
+            supportActionBar?.apply {
+                title = if (news.id != Constants.NEGATIVE_ID) {
+                    openFrag(NewsContentFragment.newInstance())
+                    setDisplayHomeAsUpEnabled(true)
+                    getString(R.string.content)
+                } else {
+                    openFrag(NewsTabFragment.newInstance())
+                    setDisplayHomeAsUpEnabled(false)
+                    getString(R.string.app_name).uppercase()
+                }
             }
         }
     }
 
     private fun search() {
-        newsViewModel.searchVisibleWord.observe(this) {word ->
-            updateSearchNews(word, false)
-        }
-        newsViewModel.searchHiddenWord.observe(this) {word ->
-            updateSearchNews(word, true)
-        }
+        newsViewModel.searchVisibleWord.observe(this)
+        { word -> updateSearchNews(word, false) }
+        newsViewModel.searchHiddenWord.observe(this)
+        { word -> updateSearchNews(word, true) }
     }
 
     private fun hide() {
@@ -136,13 +135,11 @@ class MainActivity : AppCompatActivity() {
     private fun updateSearchNews(word: String, isHidden: Boolean) {
         if (word.isNotEmpty())
             if (isHidden)
-                db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                    newsViewModel.newsHiddenList.value = list
-                }
+                db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this)
+                { list -> newsViewModel.newsHiddenList.value = list }
             else
-                db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this) {list ->
-                    newsViewModel.newsVisibleList.value = list
-                }
+                db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this)
+                { list -> newsViewModel.newsVisibleList.value = list }
     }
 
     private fun sendHideRequest(news: NewsEntity) {

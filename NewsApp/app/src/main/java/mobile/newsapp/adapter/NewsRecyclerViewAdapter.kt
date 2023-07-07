@@ -12,15 +12,16 @@ import mobile.newsapp.R
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter(
+class NewsRecyclerViewAdapter(
     private val listener: Listener,
     private val fragment: Fragment
-    ) : ListAdapter<NewsEntity, NewsAdapter.Holder>(Comparator()) {
+    ) : ListAdapter<NewsEntity, NewsRecyclerViewAdapter.Holder>(Comparator()) {
     class Holder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsItemBinding.bind(view)
 
-        fun bind (news: NewsEntity, listener: Listener, fragment: Fragment) = with(binding) {
-            Glide.with(fragment).load(news.img).into(newsImage);
+        fun bind (news: NewsEntity, listener: Listener, fragment: Fragment)
+        = with(binding) {
+            Glide.with(fragment).load(news.img).into(newsImage)
             tvTitle.text = news.getTitleWithQuotes()
             tvAnnotation.text = news.annotation
             cvItem.setOnClickListener {
@@ -30,7 +31,10 @@ class NewsAdapter(
                 listener.onClickHiddenButton(news)
             }
             swHidden.isChecked = news.hidden
-            ivVisibility.setImageResource(if (swHidden.isChecked) R.drawable.ic_invisible else R.drawable.ic_visible)
+            ivVisibility.setImageResource(
+                if (swHidden.isChecked) R.drawable.ic_invisible
+                else R.drawable.ic_visible
+            )
         }
     }
 
@@ -46,7 +50,9 @@ class NewsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_item, parent, false)
+        val view = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.news_item, parent, false)
         return Holder(view)
     }
 

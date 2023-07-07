@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
 import mobile.newsapp.databinding.FragmentNewsContentBinding
 import mobile.newsapp.viewModel.NewsViewModel
 
@@ -27,9 +26,9 @@ class NewsContentFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        newsViewModel.currentNews.observe(activity as LifecycleOwner) {
+        newsViewModel.currentNews.observe(requireActivity()) {news ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                webViewSetup(it.mobile_url)
+                webViewSetup(news.mobile_url)
             }
         }
     }
@@ -37,8 +36,8 @@ class NewsContentFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetJavaScriptEnabled")
     private fun webViewSetup(url: String) {
-        binding.wv.webViewClient = WebViewClient()
         binding.wv.apply {
+            webViewClient = WebViewClient()
             loadUrl(url)
             settings.javaScriptEnabled = true
             settings.safeBrowsingEnabled = true
