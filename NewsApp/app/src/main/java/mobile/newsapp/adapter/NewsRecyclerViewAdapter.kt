@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import mobile.newsapp.R
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.NewsItemBinding
+import mobile.newsapp.extension.withQuotes
 
 class NewsRecyclerViewAdapter(
     private val listener: Listener,
@@ -22,7 +23,7 @@ class NewsRecyclerViewAdapter(
         fun bind (news: NewsEntity, listener: Listener, fragment: Fragment)
         = with(binding) {
             Glide.with(fragment).load(news.img).into(newsImage)
-            tvTitle.text = news.getTitleWithQuotes()
+            tvTitle.text = news.title.withQuotes()
             tvAnnotation.text = news.annotation
             cvItem.setOnClickListener {
                 listener.onCLickCard(news)

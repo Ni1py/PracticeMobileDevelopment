@@ -31,5 +31,4 @@ data class NewsEntity (
             Constants.EMPTY_STRING,
             false)
     }
-    fun getTitleWithQuotes() = "\"$title\""
 }

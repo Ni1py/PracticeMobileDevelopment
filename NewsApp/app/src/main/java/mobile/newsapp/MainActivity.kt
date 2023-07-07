@@ -13,15 +13,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import mobile.newsapp.constants.Constants
-import mobile.newsapp.data.api.ApiServices
+import mobile.newsapp.data.api.RetrofitBuilder
 import mobile.newsapp.data.db.MainDb
 import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.ActivityMainBinding
 import mobile.newsapp.fragment.NewsContentFragment
 import mobile.newsapp.fragment.NewsTabFragment
 import mobile.newsapp.viewModel.NewsViewModel
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding : ActivityMainBinding
@@ -54,9 +52,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         db = MainDb.getDb(this)
-        db.getDao().getVisibleNews().asLiveData().observe(this)
+        db.getDao().getNewsByHidden(false).asLiveData().observe(this)
         { list -> newsViewModel.newsVisibleList.value = list }
-        db.getDao().getHiddenNews().asLiveData().observe(this)
+        db.getDao().getNewsByHidden(true).asLiveData().observe(this)
         { list -> newsViewModel.newsHiddenList.value = list }
         newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
         newsViewModel.currentNews.value = NewsEntity.getEmptyNews()
@@ -65,19 +63,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun makeApiRequest() {
-        val api = Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiServices::class.java)
-
         var listHiddenNewsId = listOf<Int>()
-        db.getDao().getHiddenNews().asLiveData().observe(this)
-        { listHiddenNews -> listHiddenNewsId = listHiddenNews.map {it.id} }
+        db.getDao().getNewsByHidden(true).asLiveData().observe(this)
+        { list -> listHiddenNewsId = list.map { news -> news.id } }
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = api.getNewsList()
+                val response = RetrofitBuilder.getRetrofit().getNewsList()
                 db.getDao().deleteNews()
                 db.getDao().insertAllNews(response.data.news.map {newsModel ->
                         NewsEntity.fromNewsModel(
@@ -135,10 +127,12 @@ class MainActivity : AppCompatActivity() {
     private fun updateSearchNews(word: String, isHidden: Boolean) {
         if (word.isNotEmpty())
             if (isHidden)
-                db.getDao().getHiddenNewsByTitleAnnotation(word).asLiveData().observe(this)
+                db.getDao().getNewsByTitleAnnotationHidden(word, true)
+                    .asLiveData().observe(this)
                 { list -> newsViewModel.newsHiddenList.value = list }
             else
-                db.getDao().getVisibleNewsByTitleAnnotation(word).asLiveData().observe(this)
+                db.getDao().getNewsByTitleAnnotationHidden(word, false)
+                    .asLiveData().observe(this)
                 { list -> newsViewModel.newsVisibleList.value = list }
     }
 

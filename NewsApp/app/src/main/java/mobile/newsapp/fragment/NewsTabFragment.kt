@@ -13,8 +13,8 @@ import mobile.newsapp.databinding.FragmentNewsTabBinding
 class NewsTabFragment : Fragment() {
     private lateinit var binding: FragmentNewsTabBinding
     private val fragList = listOf<Fragment>(
-        NewsVisibleListFragment.newInstance(),
-        NewsHiddenListFragment.newInstance()
+        NewsListFragment.newInstance(false),
+        NewsListFragment.newInstance(true)
     )
 
     override fun onCreateView(
