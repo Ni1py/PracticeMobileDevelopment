@@ -52,14 +52,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         db = MainDb.getDb(this)
-        db.getDao().getNewsByHidden(false).asLiveData().observe(this)
-        { list -> newsViewModel.newsVisibleList.value = list }
-        db.getDao().getNewsByHidden(true).asLiveData().observe(this)
-        { list -> newsViewModel.newsHiddenList.value = list }
+        initNewsLists()
         newsViewModel.hiddenNews.value = NewsEntity.getEmptyNews()
         newsViewModel.currentNews.value = NewsEntity.getEmptyNews()
         newsViewModel.searchVisibleWord.value = Constants.EMPTY_STRING
         newsViewModel.searchHiddenWord.value = Constants.EMPTY_STRING
+    }
+
+    private fun initNewsLists() {
+        db.getDao().getNewsByHidden(false).asLiveData().observe(this)
+        { list -> newsViewModel.newsVisibleList.value = list }
+        db.getDao().getNewsByHidden(true).asLiveData().observe(this)
+        { list -> newsViewModel.newsHiddenList.value = list }
     }
 
     private fun makeApiRequest() {
@@ -93,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         newsViewModel.currentNews.observe(this) {news ->
             supportActionBar?.apply {
                 title = if (news.id != Constants.NEGATIVE_ID) {
+                    initNewsLists()
                     openFrag(NewsContentFragment.newInstance())
                     setDisplayHomeAsUpEnabled(true)
                     getString(R.string.content)
