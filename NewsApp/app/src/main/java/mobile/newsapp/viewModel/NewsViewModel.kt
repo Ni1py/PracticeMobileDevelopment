@@ -23,4 +23,7 @@ open class NewsViewModel : ViewModel() {
     val searchHiddenWord: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
+    val currentTabPos: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
 }
