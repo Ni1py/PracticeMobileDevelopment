@@ -24,12 +24,12 @@ class NewsRecyclerViewAdapter(
         private val binding = NewsItemBinding.bind(view)
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun bind (news: NewsEntity, listener: Listener, fragment: Fragment)
+        fun bind (news: NewsEntity, listener: Listener, fragment: Fragment, position: Int)
         = with(binding) {
             Glide.with(fragment).load(news.img).into(newsImage)
             tvTitle.text = news.title.withQuotes()
             tvAnnotation.text = news.annotation
-            cvItem.setOnClickListener { listener.onCLickCard(news) }
+            cvItem.setOnClickListener { listener.onCLickCard(news, position) }
             swHidden.setOnClickListener { listener.onClickHiddenButton(news) }
             swHidden.isChecked = news.hidden
             ivVisibility.setImageResource(
@@ -60,11 +60,11 @@ class NewsRecyclerViewAdapter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(getItem(position), listener, fragment)
+        holder.bind(getItem(position), listener, fragment, position)
     }
 
     interface Listener {
-        fun onCLickCard(news: NewsEntity)
+        fun onCLickCard(news: NewsEntity, position: Int)
         fun onClickHiddenButton(news: NewsEntity)
     }
 }

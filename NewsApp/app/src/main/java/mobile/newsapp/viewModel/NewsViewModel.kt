@@ -26,4 +26,10 @@ open class NewsViewModel : ViewModel() {
     val currentTabPos: MutableLiveData<Int> by lazy {
         MutableLiveData<Int>()
     }
+    val currentVisibleNewsPos: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+    val currentHiddenNewsPos: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
 }

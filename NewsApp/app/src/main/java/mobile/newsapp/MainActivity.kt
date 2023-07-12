@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
         newsViewModel.searchVisibleWord.value = Constants.EMPTY_STRING
         newsViewModel.searchHiddenWord.value = Constants.EMPTY_STRING
         newsViewModel.currentTabPos.value = 0
+        newsViewModel.currentHiddenNewsPos.value = 0
+        newsViewModel.currentVisibleNewsPos.value = 0
     }
 
     private fun initNewsLists() {

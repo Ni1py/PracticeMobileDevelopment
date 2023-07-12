@@ -16,6 +16,7 @@ import mobile.newsapp.data.db.entity.NewsEntity
 import mobile.newsapp.databinding.FragmentNewsListBinding
 import mobile.newsapp.extension.withPercentages
 import mobile.newsapp.viewModel.NewsViewModel
+import java.text.FieldPosition
 import java.time.LocalDate
 import java.util.Collections.sort
 
@@ -45,6 +46,13 @@ class NewsListFragment : Fragment(), NewsRecyclerViewAdapter.Listener {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initAdapter()
+        initRecyclerView()
+        initSearchView()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initAdapter() {
         adapter = NewsRecyclerViewAdapter(this, this)
         adapter.apply {
             if (isHidden)
@@ -58,19 +66,30 @@ class NewsListFragment : Fragment(), NewsRecyclerViewAdapter.Listener {
                     sortByDate(list)
                     submitList(list) }
         }
+    }
+
+    private fun initRecyclerView() {
         binding.apply {
             rcView.layoutManager = LinearLayoutManager(context)
             rcView.adapter = adapter
-
-            svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(text: String?): Boolean { return true }
-                override fun onQueryTextChange(text: String?): Boolean {
-                    if (isHidden) newsViewModel.searchHiddenWord.value = text?.withPercentages()
-                    else newsViewModel.searchVisibleWord.value = text?.withPercentages()
-                    return true
-                }
-            })
+            if (isHidden)
+                newsViewModel.currentHiddenNewsPos.observe(requireActivity())
+                { hiddenPos -> rcView.post { rcView.scrollToPosition(hiddenPos) } }
+            else
+                newsViewModel.currentVisibleNewsPos.observe(requireActivity())
+                { visiblePos -> rcView.scrollToPosition(visiblePos) }
         }
+    }
+
+    private fun initSearchView() {
+        binding.svNews.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(text: String?): Boolean { return true }
+            override fun onQueryTextChange(text: String?): Boolean {
+                if (isHidden) newsViewModel.searchHiddenWord.value = text?.withPercentages()
+                else newsViewModel.searchVisibleWord.value = text?.withPercentages()
+                return true
+            }
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -88,8 +107,12 @@ class NewsListFragment : Fragment(), NewsRecyclerViewAdapter.Listener {
         }
     }
 
-    override fun onCLickCard(news: NewsEntity) {
+    override fun onCLickCard(news: NewsEntity, position: Int) {
         newsViewModel.currentNews.value = news
+        if (isHidden)
+            newsViewModel.currentHiddenNewsPos.value = position
+        else
+            newsViewModel.currentVisibleNewsPos.value = position
     }
 
     override fun onClickHiddenButton(news: NewsEntity) {
