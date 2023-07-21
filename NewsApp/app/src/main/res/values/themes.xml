@@ -1,9 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.NewsApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Theme.NewsApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/purple_200</item>
+        <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.NewsApp" parent="Base.Theme.NewsApp" />
+    <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:textSize">17sp</item>
+    </style>
 </resources>

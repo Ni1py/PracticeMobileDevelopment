@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="fragListTitles">
+        <item>@string/visible_news</item>
+        <item>@string/hidden_news</item>
+    </string-array>
+
+</resources>
